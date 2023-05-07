@@ -1,8 +1,8 @@
 import correlator from 'express-correlation-id';
-import {logReqRes} from '@middlewares/morgan';
-import {config} from '@utils';
-import type {Request, Response} from 'express';
-import type {TokenIndexer} from 'morgan';
+import { logReqRes } from '@middlewares/morgan';
+import { config } from '@utils';
+import type { Request, Response } from 'express';
+import type { TokenIndexer } from 'morgan';
 
 jest.mock('express-correlation-id');
 jest.mock('morgan');
