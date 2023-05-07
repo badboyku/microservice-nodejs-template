@@ -8,6 +8,7 @@ module.exports = {
           ['@', './src'],
           ['@controllers', './src/controllers'],
           ['@errors', './src/errors'],
+          ['@middlewares', './src/middlewares'],
           ['@routes', './src/routes'],
           ['@services', './src/services'],
           ['@types', './src/@types/global.d.ts'],

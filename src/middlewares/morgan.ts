@@ -1,9 +1,9 @@
 import correlator from 'express-correlation-id';
+import type {FormatFn, TokenIndexer} from 'morgan';
 import morgan from 'morgan';
-import { config } from '@utils';
-import { LOG_FORMATS, LOG_LEVELS } from '@utils/constants';
-import type { FormatFn, TokenIndexer } from 'morgan';
-import type { Request, Response } from 'express';
+import {config} from '@utils';
+import {LOG_FORMATS, LOG_LEVELS} from '@utils/constants';
+import type {Request, Response} from 'express';
 
 export const logReqRes = (tokens: TokenIndexer, req: Request, res: Response) => {
   const severity = LOG_LEVELS.INFO;

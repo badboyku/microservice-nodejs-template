@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-import config from './config';
-import logger from './logger';
+import config from '@utils/config';
+import logger from '@utils/logger';
 
 export { config, logger };

@@ -1,7 +1,7 @@
 ### App ####
-node_modules/
 dist/
 key/
+node_modules/
 .env
 output.txt
 

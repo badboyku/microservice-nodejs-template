@@ -1,6 +1,6 @@
 /* eslint-disable global-require, @typescript-eslint/no-var-requires */
 import process from 'node:process';
-import type { Config } from '@types';
+import type {Config} from '@types';
 
 describe('utils config', () => {
   const ENV_BACKUP = process.env;
@@ -17,7 +17,7 @@ describe('utils config', () => {
           jest.resetModules();
           process.env.APP_LOG_LEVEL = val;
 
-          config = require('./config').default;
+          config = require('@utils/config').default;
         });
 
         afterAll(() => {
@@ -42,7 +42,7 @@ describe('utils config', () => {
           jest.resetModules();
           process.env.APP_LOG_OUTPUT_FORMAT = val;
 
-          config = require('./config').default;
+          config = require('@utils/config').default;
         });
 
         afterAll(() => {
@@ -67,7 +67,7 @@ describe('utils config', () => {
           jest.resetModules();
           process.env.NODE_ENV = val;
 
-          config = require('./config').default;
+          config = require('@utils/config').default;
         });
 
         afterAll(() => {
@@ -92,7 +92,7 @@ describe('utils config', () => {
           jest.resetModules();
           process.env.APP_PORT = val;
 
-          config = require('./config').default;
+          config = require('@utils/config').default;
         });
 
         afterAll(() => {
@@ -117,7 +117,7 @@ describe('utils config', () => {
           jest.resetModules();
           process.env.CORS_ALLOWED_HEADERS = val;
 
-          config = require('./config').default;
+          config = require('@utils/config').default;
         });
 
         afterAll(() => {
@@ -142,7 +142,7 @@ describe('utils config', () => {
           jest.resetModules();
           process.env.CORS_CREDENTIALS = val;
 
-          config = require('./config').default;
+          config = require('@utils/config').default;
         });
 
         afterAll(() => {
@@ -167,7 +167,7 @@ describe('utils config', () => {
           jest.resetModules();
           process.env.CORS_WHITELIST = val;
 
-          config = require('./config').default;
+          config = require('@utils/config').default;
         });
 
         afterAll(() => {

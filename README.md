@@ -38,4 +38,4 @@ Jest has been set up with coverage needing at least 80%. We are following indust
 ---
 
 ## Folder Structure
-In the `src` folder, let's try to keep a `@types`, `controllers`, `routes`, `services`, and `utils` folder, in order to have a common folder structure for each microservice app.  Apart from that, create folders to support your application.
+In the `src` folder, let's try to keep a `@types`, `controllers`, `errors`, `middlewares`, `routes`, `services`, and `utils` folder, in order to have a common folder structure for each microservice app.  Apart from that, create folders to support your application.

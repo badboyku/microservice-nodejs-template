@@ -1,4 +1,4 @@
 /* istanbul ignore file */
-import healthService from './healthService';
+import healthService from '@services/healthService';
 
 export { healthService };

@@ -1,6 +1,9 @@
-import { healthController } from '@controllers';
-import { healthService } from '@services';
-import type { NextFunction, Request, Response } from 'express';
+import {healthController} from '@controllers';
+import {healthService} from '@services';
+import type {NextFunction, Request, Response} from 'express';
+
+jest.mock('@services/healthService');
+jest.mock('@utils/logger');
 
 describe('Health Controller', () => {
   describe('calls function checkHealth', () => {

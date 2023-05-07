@@ -2,9 +2,6 @@
 export type CheckHealthResult = { code: number; body: { status: string } };
 
 /** Utils Types */
-// app
-export type AppStartResult = { isStarted: boolean };
-
 // config
 export type Config = {
   app: { logLevel: string; logOutputFormat: string; nodeEnv: string; port: number };
