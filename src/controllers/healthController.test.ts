@@ -1,6 +1,6 @@
-import {healthController} from '@controllers';
-import {healthService} from '@services';
-import type {NextFunction, Request, Response} from 'express';
+import { healthController } from '@controllers';
+import { healthService } from '@services';
+import type { NextFunction, Request, Response } from 'express';
 
 describe('Health Controller', () => {
   describe('calls function checkHealth', () => {

@@ -1,5 +1,5 @@
-import {healthService} from '@services';
-import type {CheckHealthResult} from '@types';
+import { healthService } from '@services';
+import type { CheckHealthResult } from '@types';
 
 describe('Health Service', () => {
   describe('calls function checkHealth', () => {

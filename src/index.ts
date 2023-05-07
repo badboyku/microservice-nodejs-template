@@ -1,8 +1,8 @@
 /* istanbul ignore file */
 import express from 'express';
 import routes from '@routes';
-import {config, logger} from '@utils';
-import {apiError, correlator, cors, helmet, morgan} from '@utils/middlewares';
+import { config, logger } from '@utils';
+import { apiError, correlator, cors, helmet, morgan } from '@utils/middlewares';
 
 // Create app
 const app = express();

@@ -1,6 +1,6 @@
-import type {CorsOptions} from 'cors';
 import cors from 'cors';
-import {config} from '@utils';
+import { config } from '@utils';
+import type { CorsOptions } from 'cors';
 
 export const getCorsOptions = (): CorsOptions => ({
   origin: (requestOrigin: string | undefined, callback: (err: Error | null, origin?: boolean) => void) => {

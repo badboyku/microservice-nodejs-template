@@ -1,5 +1,5 @@
-import type {HelmetOptions} from 'helmet';
 import helmet from 'helmet';
+import type { HelmetOptions } from 'helmet';
 
 export const getHelmetOptions = (): HelmetOptions => ({
   crossOriginResourcePolicy: { policy: 'cross-origin' },

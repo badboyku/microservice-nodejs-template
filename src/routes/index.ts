@@ -1,7 +1,7 @@
 /* istanbul ignore file */
-import {Router} from 'express';
+import { Router } from 'express';
 import healthRoute from '@routes/healthRoute';
-import {apiError} from '@utils/middlewares';
+import { apiError } from '@utils/middlewares';
 
 const route = Router();
 

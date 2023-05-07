@@ -1,5 +1,5 @@
 /* eslint-disable no-console, testing-library/no-debugging-utils */
-import {config, logger} from '@utils';
+import { config, logger } from '@utils';
 
 jest.mock('@utils/config');
 
