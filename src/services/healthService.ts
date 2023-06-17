@@ -1,5 +1,5 @@
-import {logger} from '@utils';
-import type {CheckHealthResult} from '@types';
+import { logger } from '@utils';
+import type { CheckHealthResult } from '@types';
 
 const checkHealth = (): CheckHealthResult => {
   logger.debug('healthService: checkHealth called');

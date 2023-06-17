@@ -1,7 +1,7 @@
-import {UnauthorizedError} from '@errors';
-import {apiError} from '@middlewares';
-import {config, logger} from '@utils';
-import type {Request, Response} from 'express';
+import { UnauthorizedError } from '@errors';
+import { apiError } from '@middlewares';
+import { config, logger } from '@utils';
+import type { Request, Response } from 'express';
 
 jest.mock('@utils/config');
 jest.mock('@utils/logger');
