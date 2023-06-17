@@ -1,6 +1,6 @@
+import type {CorsOptions} from 'cors';
 import cors from 'cors';
-import { config } from '@utils';
-import type { CorsOptions } from 'cors';
+import {config} from '@utils';
 
 export const getCorsOptions = (): CorsOptions => ({
   origin: (requestOrigin: string | undefined, callback: (err: Error | null, origin?: boolean) => void) => {
@@ -14,6 +14,7 @@ export const getCorsOptions = (): CorsOptions => ({
   },
   allowedHeaders: config.cors.allowedHeaders.split(','),
   credentials: config.cors.credentials,
+  maxAge: 7200, // Prevent sending multiple preflight OPTIONS requests.
 });
 
 export default cors(getCorsOptions());

@@ -1,10 +1,12 @@
 /** Services Types */
-export type CheckHealthResult = { code: number; body: { status: string } };
+export type ServiceError = { code: number; message: string };
+
+export type CheckHealthResult = { data?: { status: string }; error?: ServiceError };
 
 /** Utils Types */
 // config
 export type Config = {
-  app: { logLevel: string; logOutputFormat: string; nodeEnv: string; port: number };
+  app: { logLevel: string; logOutputFormat: string; name: string; nodeEnv: string; port: number; version: string };
   cors: { allowedHeaders: string; credentials: boolean; whitelist: string };
 };
 

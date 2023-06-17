@@ -1,13 +1,13 @@
-import { UnauthorizedError } from '@errors';
-import { apiError } from '@middlewares';
-import { config, logger } from '@utils';
-import type { Request, Response } from 'express';
+import {UnauthorizedError} from '@errors';
+import {apiError} from '@middlewares';
+import {config, logger} from '@utils';
+import type {Request, Response} from 'express';
 
 jest.mock('@utils/config');
 jest.mock('@utils/logger');
 
-describe('utils/middleware apiError', () => {
-  const configAppDefault = { logLevel: '', logOutputFormat: '', nodeEnv: '', port: 0 };
+describe('ApiError Middleware', () => {
+  const configAppDefault = { logLevel: '', logOutputFormat: '', name: '', nodeEnv: '', port: 0, version: '' };
 
   describe('calls function handleError', () => {
     const fooErr = new Error('foo');

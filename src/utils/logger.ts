@@ -1,7 +1,8 @@
 /* eslint-disable no-console */
-import { config } from '@utils';
-import { LOG_FORMATS, LOG_LEVELS, LOG_LEVELS_NUM } from '@utils/constants';
-import type { LogContext, Logger } from '@types';
+import correlator from 'express-correlation-id';
+import {config} from '@utils';
+import {LOG_FORMATS, LOG_LEVELS, LOG_LEVELS_NUM} from '@utils/constants';
+import type {LogContext, Logger} from '@types';
 
 const { DEBUG, INFO, WARN, ERROR } = LOG_LEVELS;
 const { DEBUG: DEBUG_NUM, INFO: INFO_NUM, WARN: WARN_NUM, ERROR: ERROR_NUM } = LOG_LEVELS_NUM;
@@ -23,7 +24,7 @@ const getSeverityNum = (severity: string): number => {
 const skipLog = (severity: string): boolean => getSeverityNum(severity) < getSeverityNum(config.app.logLevel);
 
 const getLogMessage = (severity: string, message: string, context?: LogContext): string => {
-  const log = { severity, message, context };
+  const log = { correlationId: correlator.getId(), severity, message, context };
 
   return config.app.logOutputFormat === LOG_FORMATS.DEV ? JSON.stringify(log, null, 4) : JSON.stringify(log);
 };

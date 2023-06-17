@@ -1,15 +1,26 @@
 /* eslint-disable no-console, testing-library/no-debugging-utils */
-import { config, logger } from '@utils';
+import correlator from 'express-correlation-id';
+import {config, logger} from '@utils';
 
+jest.mock('express-correlation-id');
 jest.mock('@utils/config');
 
-describe('utils logger', () => {
+describe('Logger Util', () => {
   const message = 'message';
   const context = { foo: 'bar' };
+  const correlationId = 'correlationId';
   const logMessage = 'logMessage';
-  const configAppDefault = { logLevel: 'INFO', logOutputFormat: 'ELK', nodeEnv: 'TEST', port: 3000, isTsNode: true };
+  const configAppDefault = {
+    logLevel: 'INFO',
+    logOutputFormat: 'ELK',
+    name: 'name',
+    nodeEnv: 'TEST',
+    port: 3000,
+    version: 'version',
+  };
 
   beforeEach(() => {
+    jest.spyOn(correlator, 'getId').mockReturnValueOnce(correlationId);
     jest.spyOn(JSON, 'stringify').mockReturnValueOnce(logMessage);
   });
 
@@ -34,8 +45,12 @@ describe('utils logger', () => {
         logger.debug(message, context);
       });
 
+      it('calls correlator.getId', () => {
+        expect(correlator.getId).toHaveBeenCalled();
+      });
+
       it('calls JSON.stringify', () => {
-        expect(JSON.stringify).toHaveBeenCalledWith({ severity: 'DEBUG', message, context });
+        expect(JSON.stringify).toHaveBeenCalledWith({ correlationId, severity: 'DEBUG', message, context });
       });
 
       it('calls console.debug', () => {
@@ -51,7 +66,7 @@ describe('utils logger', () => {
       });
 
       it('calls JSON.stringify with spaces', () => {
-        expect(JSON.stringify).toHaveBeenCalledWith({ severity: 'DEBUG', message, context }, null, 4);
+        expect(JSON.stringify).toHaveBeenCalledWith({ correlationId, severity: 'DEBUG', message, context }, null, 4);
       });
     });
 
@@ -89,8 +104,12 @@ describe('utils logger', () => {
         logger.info(message, context);
       });
 
+      it('calls correlator.getId', () => {
+        expect(correlator.getId).toHaveBeenCalled();
+      });
+
       it('calls JSON.stringify', () => {
-        expect(JSON.stringify).toHaveBeenCalledWith({ severity: 'INFO', message, context });
+        expect(JSON.stringify).toHaveBeenCalledWith({ correlationId, severity: 'INFO', message, context });
       });
 
       it('calls console.info', () => {
@@ -106,7 +125,7 @@ describe('utils logger', () => {
       });
 
       it('calls JSON.stringify with spaces', () => {
-        expect(JSON.stringify).toHaveBeenCalledWith({ severity: 'INFO', message, context }, null, 4);
+        expect(JSON.stringify).toHaveBeenCalledWith({ correlationId, severity: 'INFO', message, context }, null, 4);
       });
     });
 
@@ -144,8 +163,12 @@ describe('utils logger', () => {
         logger.warn(message, context);
       });
 
+      it('calls correlator.getId', () => {
+        expect(correlator.getId).toHaveBeenCalled();
+      });
+
       it('calls JSON.stringify', () => {
-        expect(JSON.stringify).toHaveBeenCalledWith({ severity: 'WARN', message, context });
+        expect(JSON.stringify).toHaveBeenCalledWith({ correlationId, severity: 'WARN', message, context });
       });
 
       it('calls console.warn', () => {
@@ -161,7 +184,7 @@ describe('utils logger', () => {
       });
 
       it('calls JSON.stringify with spaces', () => {
-        expect(JSON.stringify).toHaveBeenCalledWith({ severity: 'WARN', message, context }, null, 4);
+        expect(JSON.stringify).toHaveBeenCalledWith({ correlationId, severity: 'WARN', message, context }, null, 4);
       });
     });
 
@@ -199,8 +222,12 @@ describe('utils logger', () => {
         logger.error(message, context);
       });
 
+      it('calls correlator.getId', () => {
+        expect(correlator.getId).toHaveBeenCalled();
+      });
+
       it('calls JSON.stringify', () => {
-        expect(JSON.stringify).toHaveBeenCalledWith({ severity: 'ERROR', message, context });
+        expect(JSON.stringify).toHaveBeenCalledWith({ correlationId, severity: 'ERROR', message, context });
       });
 
       it('calls console.error', () => {
@@ -216,7 +243,7 @@ describe('utils logger', () => {
       });
 
       it('calls JSON.stringify with spaces', () => {
-        expect(JSON.stringify).toHaveBeenCalledWith({ severity: 'ERROR', message, context }, null, 4);
+        expect(JSON.stringify).toHaveBeenCalledWith({ correlationId, severity: 'ERROR', message, context }, null, 4);
       });
     });
   });
