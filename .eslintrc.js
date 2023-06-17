@@ -3,6 +3,10 @@ module.exports = {
   settings: {
     react: { version: '999.999.999' },
     'import/resolver': {
+      node: {
+        extensions: ['.js', '.ts', '.d.ts'],
+        moduleDirectory: ['./node_modules', './src'],
+      },
       alias: {
         map: [
           ['@', './src'],

@@ -6,7 +6,7 @@ import type { CorsOptions } from 'cors';
 jest.mock('cors');
 jest.mock('@utils/config');
 
-describe('utils/middleware cors', () => {
+describe('Cors Middleware', () => {
   const configCorsDefault = { allowedHeaders: '', credentials: false, whitelist: '' };
 
   describe('calls function getCorsOptions', () => {

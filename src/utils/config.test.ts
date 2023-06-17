@@ -1,8 +1,7 @@
-/* eslint-disable global-require, @typescript-eslint/no-var-requires */
 import process from 'node:process';
 import type { Config } from '@types';
 
-describe('utils config', () => {
+describe('Config Util', () => {
   const ENV_BACKUP = process.env;
   let config: Config;
 
@@ -17,7 +16,7 @@ describe('utils config', () => {
           jest.resetModules();
           process.env.APP_LOG_LEVEL = val;
 
-          config = require('@utils/config').default;
+          config = jest.requireActual('./config').default;
         });
 
         afterAll(() => {
@@ -42,7 +41,7 @@ describe('utils config', () => {
           jest.resetModules();
           process.env.APP_LOG_OUTPUT_FORMAT = val;
 
-          config = require('@utils/config').default;
+          config = jest.requireActual('./config').default;
         });
 
         afterAll(() => {
@@ -51,6 +50,31 @@ describe('utils config', () => {
 
         it(`returns ${val ? 'value' : 'default'}`, () => {
           expect(config.app.logOutputFormat).toEqual(expected);
+        });
+      });
+    });
+  });
+
+  describe('calling var app.name', () => {
+    const testCases = [
+      { val: 'foo', expected: 'FOO' },
+      { val: '', expected: '' },
+    ];
+    testCases.forEach(({ val, expected }) => {
+      describe(`when process.env.npm_package_name ${val ? 'set' : 'not set'}`, () => {
+        beforeEach(() => {
+          jest.resetModules();
+          process.env.npm_package_name = val;
+
+          config = jest.requireActual('./config').default;
+        });
+
+        afterAll(() => {
+          process.env = ENV_BACKUP;
+        });
+
+        it(`returns ${val ? 'value' : 'default'}`, () => {
+          expect(config.app.name).toEqual(expected);
         });
       });
     });
@@ -67,7 +91,7 @@ describe('utils config', () => {
           jest.resetModules();
           process.env.NODE_ENV = val;
 
-          config = require('@utils/config').default;
+          config = jest.requireActual('./config').default;
         });
 
         afterAll(() => {
@@ -92,7 +116,7 @@ describe('utils config', () => {
           jest.resetModules();
           process.env.APP_PORT = val;
 
-          config = require('@utils/config').default;
+          config = jest.requireActual('./config').default;
         });
 
         afterAll(() => {
@@ -101,6 +125,31 @@ describe('utils config', () => {
 
         it(`returns ${val ? 'value' : 'default'}`, () => {
           expect(config.app.port).toEqual(expected);
+        });
+      });
+    });
+  });
+
+  describe('calling var app.version', () => {
+    const testCases = [
+      { val: 'foo', expected: 'FOO' },
+      { val: '', expected: '' },
+    ];
+    testCases.forEach(({ val, expected }) => {
+      describe(`when process.env.npm_package_version ${val ? 'set' : 'not set'}`, () => {
+        beforeEach(() => {
+          jest.resetModules();
+          process.env.npm_package_version = val;
+
+          config = jest.requireActual('./config').default;
+        });
+
+        afterAll(() => {
+          process.env = ENV_BACKUP;
+        });
+
+        it(`returns ${val ? 'value' : 'default'}`, () => {
+          expect(config.app.version).toEqual(expected);
         });
       });
     });
@@ -117,7 +166,7 @@ describe('utils config', () => {
           jest.resetModules();
           process.env.CORS_ALLOWED_HEADERS = val;
 
-          config = require('@utils/config').default;
+          config = jest.requireActual('./config').default;
         });
 
         afterAll(() => {
@@ -133,7 +182,7 @@ describe('utils config', () => {
 
   describe('calling var cors.credentials', () => {
     const testCases = [
-      { val: 'true', expected: true },
+      { val: 'TRUE', expected: true },
       { val: '', expected: false },
     ];
     testCases.forEach(({ val, expected }) => {
@@ -142,7 +191,7 @@ describe('utils config', () => {
           jest.resetModules();
           process.env.CORS_CREDENTIALS = val;
 
-          config = require('@utils/config').default;
+          config = jest.requireActual('./config').default;
         });
 
         afterAll(() => {
@@ -167,7 +216,7 @@ describe('utils config', () => {
           jest.resetModules();
           process.env.CORS_WHITELIST = val;
 
-          config = require('@utils/config').default;
+          config = jest.requireActual('./config').default;
         });
 
         afterAll(() => {

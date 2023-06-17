@@ -7,17 +7,17 @@ jest.mock('@utils/logger');
 
 describe('Health Controller', () => {
   describe('calls function checkHealth', () => {
+    const req = {};
+    const res = { status: jest.fn(), json: jest.fn() };
+    const next = jest.fn();
+
     describe('successfully', () => {
-      const req = {};
-      const res = { status: jest.fn(), json: jest.fn() };
-      const next = jest.fn();
-      const code = 200;
-      const body = { status: 'ok' };
+      const data = { status: 'ok' };
 
       beforeEach(() => {
-        jest.spyOn(healthService, 'checkHealth').mockReturnValue({ code, body });
+        jest.spyOn(healthService, 'checkHealth').mockReturnValue({ data });
 
-        healthController.checkHealth(req as unknown as Request, res as unknown as Response, next as NextFunction);
+        healthController.checkHealth(req as Request, res as unknown as Response, next as NextFunction);
       });
 
       afterEach(() => {
@@ -28,27 +28,46 @@ describe('Health Controller', () => {
         expect(healthService.checkHealth).toHaveBeenCalledWith();
       });
 
-      it('sets status on response', () => {
-        expect(res.status).toHaveBeenCalledWith(code);
+      it('sets status on response with 200', () => {
+        expect(res.status).toHaveBeenCalledWith(200);
       });
 
-      it('sets json on response', () => {
-        expect(res.json).toHaveBeenCalledWith(body);
+      it('sets json on response with data', () => {
+        expect(res.json).toHaveBeenCalledWith({ ok: true, data });
+      });
+    });
+
+    describe('with error', () => {
+      const error = { code: 400, message: 'foo bar' };
+
+      beforeEach(() => {
+        jest.spyOn(healthService, 'checkHealth').mockReturnValue({ error });
+
+        healthController.checkHealth(req as Request, res as unknown as Response, next as NextFunction);
+      });
+
+      afterEach(() => {
+        jest.restoreAllMocks();
+      });
+
+      it('sets status on response with error code', () => {
+        expect(res.status).toHaveBeenCalledWith(error.code);
+      });
+
+      it('sets json on response with error message', () => {
+        expect(res.json).toHaveBeenCalledWith({ ok: false, error: error.message });
       });
     });
 
     describe('with exception', () => {
-      const req = {};
-      const res = {};
-      const next = jest.fn();
-      const err = new Error('Foo Bar');
+      const error = new Error('Foo Bar');
 
       beforeEach(() => {
         jest.spyOn(healthService, 'checkHealth').mockImplementation(() => {
-          throw err;
+          throw error;
         });
 
-        healthController.checkHealth(req as Request, res as Response, next as NextFunction);
+        healthController.checkHealth(req as Request, res as unknown as Response, next as NextFunction);
       });
 
       afterEach(() => {
@@ -56,7 +75,7 @@ describe('Health Controller', () => {
       });
 
       it('calls next with error', () => {
-        expect(next).toHaveBeenCalledWith(err);
+        expect(next).toHaveBeenCalledWith(error);
       });
     });
   });

@@ -14,6 +14,7 @@ export const getCorsOptions = (): CorsOptions => ({
   },
   allowedHeaders: config.cors.allowedHeaders.split(','),
   credentials: config.cors.credentials,
+  maxAge: 7200, // Prevent sending multiple preflight OPTIONS requests.
 });
 
 export default cors(getCorsOptions());
