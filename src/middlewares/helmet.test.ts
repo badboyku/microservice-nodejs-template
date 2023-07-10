@@ -1,5 +1,5 @@
-import {getHelmetOptions} from '@middlewares/helmet';
-import type {HelmetOptions} from 'helmet';
+import { getHelmetOptions } from '@middlewares/helmet';
+import type { HelmetOptions } from 'helmet';
 
 describe('Helmet Middleware', () => {
   describe('calls function getHelmetOptions', () => {

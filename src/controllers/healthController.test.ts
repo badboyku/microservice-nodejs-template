@@ -1,5 +1,5 @@
-import {healthController} from '@controllers';
-import {healthService} from '@services';
+import { healthController } from '@controllers';
+import { healthService } from '@services';
 
 jest.mock('@services/healthService');
 jest.mock('@utils/logger');

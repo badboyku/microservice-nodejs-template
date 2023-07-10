@@ -1,10 +1,10 @@
 /* istanbul ignore file */
 import fs from 'fs';
-import type {NextFunction, Request, Response} from 'express';
-import {Router} from 'express';
+import { Router } from 'express';
 import swaggerUi from 'swagger-ui-express';
 import yaml from 'yaml';
-import {config} from '@utils';
+import { config } from '@utils';
+import type { NextFunction, Request, Response } from 'express';
 
 const swaggerDoc = yaml.parse(fs.readFileSync('./openapi.yml', 'utf8'));
 const swaggerOptions = {
