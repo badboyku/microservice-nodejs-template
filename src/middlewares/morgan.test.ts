@@ -1,11 +1,7 @@
 import correlator from 'express-correlation-id';
-import { logReqRes } from '@middlewares/morgan';
-import { config } from '@utils';
-import type { Request, Response } from 'express';
-import type { TokenIndexer } from 'morgan';
+import {logReqRes} from '@middlewares/morgan';
+import {config} from '@utils';
 
-jest.mock('express-correlation-id');
-jest.mock('morgan');
 jest.mock('@utils/config');
 
 describe('Morgan Middleware', () => {
@@ -60,7 +56,7 @@ describe('Morgan Middleware', () => {
           config.app = configApp;
           jest.spyOn(correlator, 'getId').mockReturnValue(correlationId);
 
-          result = logReqRes(tokens as TokenIndexer, req as Request, res as Response);
+          result = logReqRes(tokens as never, req as never, res as never);
         });
 
         afterEach(() => {

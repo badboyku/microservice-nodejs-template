@@ -1,8 +1,7 @@
 /* eslint-disable no-console, testing-library/no-debugging-utils */
 import correlator from 'express-correlation-id';
-import { config, logger } from '@utils';
+import {config, logger} from '@utils';
 
-jest.mock('express-correlation-id');
 jest.mock('@utils/config');
 
 describe('Logger Util', () => {

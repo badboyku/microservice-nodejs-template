@@ -1,0 +1,71 @@
+openapi: '3.0.3'
+info:
+  # Title and Version get overwritten in the api-docs route
+  title: ''
+  version: ''
+paths:
+  /health:
+    get:
+      summary: Get health
+      description: Check app health status
+      operationId: getHealth
+      tags: ['health']
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetHealthResponse'
+              example:
+                ok: true
+                data:
+                  status: ok
+
+components:
+  responses:
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiErrorResponse'
+          examples:
+            DevMode:
+              summary: Unauthorized error - development mode
+              value:
+                ok: false
+                error: Some error message
+            ProdMode:
+              summary: Unauthorized error - production mode (hide actual error message)
+              value:
+                ok: false
+                error: Unauthorized
+
+  schemas:
+    ApiErrorResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          description: status of request
+          example: false
+        error:
+          type: string
+          description: error message
+          example: some error message
+
+    GetHealthResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          description: status of request
+          example: true
+        data:
+          type: object
+          properties:
+            status:
+              type: string
+              example: ok
+

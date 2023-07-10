@@ -1,6 +1,5 @@
-import { healthController } from '@controllers';
-import { healthService } from '@services';
-import type { NextFunction, Request, Response } from 'express';
+import {healthController} from '@controllers';
+import {healthService} from '@services';
 
 jest.mock('@services/healthService');
 jest.mock('@utils/logger');
@@ -17,7 +16,7 @@ describe('Health Controller', () => {
       beforeEach(() => {
         jest.spyOn(healthService, 'checkHealth').mockReturnValue({ data });
 
-        healthController.checkHealth(req as Request, res as unknown as Response, next as NextFunction);
+        healthController.checkHealth(req as never, res as never, next);
       });
 
       afterEach(() => {
@@ -43,7 +42,7 @@ describe('Health Controller', () => {
       beforeEach(() => {
         jest.spyOn(healthService, 'checkHealth').mockReturnValue({ error });
 
-        healthController.checkHealth(req as Request, res as unknown as Response, next as NextFunction);
+        healthController.checkHealth(req as never, res as never, next);
       });
 
       afterEach(() => {
@@ -67,7 +66,7 @@ describe('Health Controller', () => {
           throw error;
         });
 
-        healthController.checkHealth(req as Request, res as unknown as Response, next as NextFunction);
+        healthController.checkHealth(req as never, res as never, next);
       });
 
       afterEach(() => {

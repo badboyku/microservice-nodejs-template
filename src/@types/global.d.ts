@@ -19,4 +19,10 @@ export type Logger = {
   error: (message: string, context?: LogContext) => void;
 };
 
-declare global {}
+declare global {
+  namespace Express {
+    export interface Request {
+      swaggerDoc: { [k: string]: unknown };
+    }
+  }
+}

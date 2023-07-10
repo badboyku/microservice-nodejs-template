@@ -1,8 +1,8 @@
 /* istanbul ignore file */
 import express from 'express';
-import { apiError, correlator, cors, helmet, morgan } from '@middlewares';
+import {apiError, correlator, cors, helmet, morgan} from '@middlewares';
 import routes from '@routes';
-import { config, logger } from '@utils';
+import {config, logger} from '@utils';
 
 // Create app
 const app = express();
@@ -23,5 +23,5 @@ app.use(apiError.handleError);
 
 // Start app
 app.listen(config.app.port, () => {
-  logger.info('App is running', { config });
+  logger.info('App is running', { config: config.app });
 });

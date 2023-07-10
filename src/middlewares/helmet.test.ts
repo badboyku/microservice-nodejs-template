@@ -1,7 +1,5 @@
-import { getHelmetOptions } from '@middlewares/helmet';
-import type { HelmetOptions } from 'helmet';
-
-jest.mock('helmet');
+import {getHelmetOptions} from '@middlewares/helmet';
+import type {HelmetOptions} from 'helmet';
 
 describe('Helmet Middleware', () => {
   describe('calls function getHelmetOptions', () => {
