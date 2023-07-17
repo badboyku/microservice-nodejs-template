@@ -8,9 +8,9 @@ import type { NextFunction, Request, Response } from 'express';
 
 const swaggerDoc = yaml.parse(fs.readFileSync('./openapi.yml', 'utf8'));
 const swaggerOptions = {
-  displayOperationId: true,
-  defaultModelsExpandDepth: 5,
   defaultModelExpandDepth: 5,
+  defaultModelsExpandDepth: 5,
+  displayOperationId: true,
   displayRequestDuration: true,
   requestSnippetsEnabled: true,
 };

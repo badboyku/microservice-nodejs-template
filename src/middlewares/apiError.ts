@@ -8,14 +8,26 @@ const handleError = (err: Error, _req: Request, res: Response, _next: NextFuncti
   let code: number;
   let error: string;
 
-  if (name === 'UnauthorizedError') {
-    code = 401;
-    // Let's hide the unauthorized error message from production requests.
-    error = isDev ? message : 'Unauthorized';
-  } else {
-    code = 500;
-    // Let's hide the error name and message from production requests.
-    error = isDev ? `${name}: ${message}` : 'Could not handle request, error has been logged internally';
+  switch (name) {
+    case 'Bad Request':
+    case 'ValidationError':
+      code = 400;
+      error = message;
+      break;
+    case 'Unauthorized':
+    case 'UnauthorizedError':
+      code = 401;
+      // Let's hide the unauthorized error message from production requests.
+      error = isDev ? message : 'Unauthorized';
+      break;
+    case 'NotFoundError':
+      code = 404;
+      error = message;
+      break;
+    default:
+      code = 500;
+      // Let's hide the error name and message from production requests.
+      error = isDev ? `${name}: ${message}` : 'Could not handle request, error has been logged internally';
   }
 
   res.status(code);

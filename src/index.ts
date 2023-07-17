@@ -1,6 +1,6 @@
 /* istanbul ignore file */
-import express from 'express';
-import { apiError, correlator, cors, helmet, morgan } from '@middlewares';
+import express, { json, urlencoded } from 'express';
+import { apiError, correlator, cors, helmet, morgan, openApiValidator } from '@middlewares';
 import routes from '@routes';
 import { config, logger } from '@utils';
 
@@ -13,9 +13,14 @@ app.use(correlator);
 app.options('*', cors); // Enabling cors pre-flight
 app.use(cors);
 app.use(morgan);
+app.use(json({ type: 'application/json' }));
+app.use(urlencoded({ type: ['application/x-www-form-urlencoded', 'multipart-form-data'], extended: true }));
 
 // Add routes
 app.use('/', routes);
+
+// Add validator
+app.use(openApiValidator);
 
 // Handle error
 app.use(apiError.logError);

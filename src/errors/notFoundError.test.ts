@@ -1,12 +1,12 @@
-import { UnauthorizedError } from '@errors';
+import { NotFoundError } from '@errors';
 
-describe('errors UnauthorizedError', () => {
+describe('NotFoundError error', () => {
   const message = 'message';
-  let error: UnauthorizedError;
+  let error: NotFoundError;
 
   describe('when called with no args', () => {
     beforeEach(() => {
-      error = new UnauthorizedError();
+      error = new NotFoundError();
     });
 
     it('has message attribute with default empty string', () => {
@@ -14,13 +14,13 @@ describe('errors UnauthorizedError', () => {
     });
 
     it('has name attribute', () => {
-      expect(error.name).toEqual('UnauthorizedError');
+      expect(error.name).toEqual('NotFoundError');
     });
   });
 
   describe('when called with args', () => {
     beforeEach(() => {
-      error = new UnauthorizedError(message);
+      error = new NotFoundError(message);
     });
 
     it('has message attribute', () => {
@@ -28,7 +28,7 @@ describe('errors UnauthorizedError', () => {
     });
 
     it('has name attribute', () => {
-      expect(error.name).toEqual('UnauthorizedError');
+      expect(error.name).toEqual('NotFoundError');
     });
   });
 });

@@ -68,4 +68,3 @@ components:
             status:
               type: string
               example: ok
-

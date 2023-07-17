@@ -1,4 +1,4 @@
-import { UnauthorizedError } from '@errors';
+import { NotFoundError, UnauthorizedError, ValidationError } from '@errors';
 import { apiError } from '@middlewares';
 import { config, logger } from '@utils';
 
@@ -7,25 +7,65 @@ jest.mock('@utils/logger');
 
 describe('ApiError Middleware', () => {
   const configAppDefault = { logLevel: '', logOutputFormat: '', name: '', nodeEnv: '', port: 0, version: '' };
+  const configAppDev = { ...configAppDefault, nodeEnv: 'DEVELOPMENT' };
 
   describe('calls function handleError', () => {
-    const unauthorizedError = new UnauthorizedError('Unauthorized error');
+    const badRequestError = { name: 'Bad Request', message: 'Bad Request error' };
     const fooErr = new Error('Foo');
+    const notFoundError = new NotFoundError('NotFound error');
+    const unauthorizedError1 = { name: 'Unauthorized', message: 'Unauthorized error' };
+    const unauthorizedError2 = new UnauthorizedError('Unauthorized error');
+    const validationError = new ValidationError('Validation error');
 
     const testCases = [
       {
+        test: 'Bad Request',
+        err: badRequestError,
+        configApp: configAppDefault,
+        code: 400,
+        error: badRequestError.message,
+      },
+      {
+        test: 'ValidationError',
+        err: validationError,
+        configApp: configAppDefault,
+        code: 400,
+        error: validationError.message,
+      },
+      {
+        test: 'Unauthorized',
+        err: unauthorizedError1,
+        configApp: configAppDefault,
+        code: 401,
+        error: 'Unauthorized',
+      },
+      {
+        test: 'Unauthorized and nodeEnv=DEVELOPMENT',
+        err: unauthorizedError1,
+        configApp: configAppDev,
+        code: 401,
+        error: unauthorizedError1.message,
+      },
+      {
         test: 'UnauthorizedError',
-        err: unauthorizedError,
+        err: unauthorizedError2,
         configApp: configAppDefault,
         code: 401,
         error: 'Unauthorized',
       },
       {
         test: 'UnauthorizedError and nodeEnv=DEVELOPMENT',
-        err: unauthorizedError,
-        configApp: { ...configAppDefault, nodeEnv: 'DEVELOPMENT' },
+        err: unauthorizedError2,
+        configApp: configAppDev,
         code: 401,
-        error: unauthorizedError.message,
+        error: unauthorizedError2.message,
+      },
+      {
+        test: 'NotFoundError',
+        err: notFoundError,
+        configApp: configAppDefault,
+        code: 404,
+        error: notFoundError.message,
       },
       {
         test: 'Error',
@@ -37,7 +77,7 @@ describe('ApiError Middleware', () => {
       {
         test: 'Error and nodeEnv=DEVELOPMENT',
         err: fooErr,
-        configApp: { ...configAppDefault, nodeEnv: 'DEVELOPMENT' },
+        configApp: configAppDev,
         code: 500,
         error: `${fooErr.name}: ${fooErr.message}`,
       },

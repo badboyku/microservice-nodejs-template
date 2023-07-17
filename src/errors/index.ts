@@ -1,4 +1,6 @@
 /* istanbul ignore file */
-import UnauthorizedError from '@errors/UnauthorizedError';
+import NotFoundError from '@errors/notFoundError';
+import UnauthorizedError from '@errors/unauthorizedError';
+import ValidationError from '@errors/validationError';
 
-export { UnauthorizedError };
+export { NotFoundError, UnauthorizedError, ValidationError };
