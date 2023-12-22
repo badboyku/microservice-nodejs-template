@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import {getCorsOptions} from '@middlewares/cors';
-import {config} from '@utils';
+import { getCorsOptions } from '@middlewares/cors';
+import { config } from '@utils';
 
 jest.mock('@utils/config');
 

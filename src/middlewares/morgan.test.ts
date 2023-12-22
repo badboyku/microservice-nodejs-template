@@ -1,6 +1,6 @@
 import correlator from 'express-correlation-id';
-import {logReqRes} from '@middlewares/morgan';
-import {config} from '@utils';
+import { logReqRes } from '@middlewares/morgan';
+import { config } from '@utils';
 
 jest.mock('@utils/config');
 

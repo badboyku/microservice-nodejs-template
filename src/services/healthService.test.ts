@@ -1,4 +1,4 @@
-import {healthService} from '@services';
+import { healthService } from '@services';
 
 jest.mock('@utils/logger');
 

@@ -1,6 +1,6 @@
-import {healthService} from '@services';
+import { healthService } from '@services';
 import logger from '@utils/logger';
-import type {NextFunction, Request, Response} from 'express';
+import type { NextFunction, Request, Response } from 'express';
 
 const checkHealth = (_req: Request, res: Response, next: NextFunction) => {
   logger.debug('healthController: checkHealth called');
