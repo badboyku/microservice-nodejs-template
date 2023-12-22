@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { config } from '@utils';
 import { getCorsOptions } from '@middlewares/cors';
-import type { CorsOptions } from 'cors';
+import { config } from '@utils';
 
 jest.mock('@utils/config');
 
@@ -10,54 +9,59 @@ describe('Cors Middleware', () => {
 
   describe('calls function getCorsOptions', () => {
     const callback = jest.fn();
-    let options: CorsOptions;
 
     describe('successfully', () => {
       beforeEach(() => {
         config.cors = { ...configCorsDefault, allowedHeaders: 'allowed,headers', credentials: true };
+      });
 
-        options = getCorsOptions();
+      it('returns origin option', () => {
+        const options = getCorsOptions();
+
+        expect(options.origin).toEqual(expect.any(Function));
       });
 
       it('returns allowedHeaders option', () => {
+        const options = getCorsOptions();
+
         expect(options.allowedHeaders).toEqual(['allowed', 'headers']);
       });
 
       it('returns credentials option', () => {
+        const options = getCorsOptions();
+
         expect(options.credentials).toEqual(true);
+      });
+
+      it('returns maxAge option', () => {
+        const options = getCorsOptions();
+
+        expect(options.maxAge).toEqual(7200);
       });
     });
 
     describe('when calling option origin function', () => {
-      describe('with requestOrigin undefined', () => {
-        const requestOrigin = undefined;
+      const testCases = [
+        { test: 'undefined', requestOrigin: undefined, configCors: configCorsDefault },
+        {
+          test: 'matching in whitelist',
+          requestOrigin: 'domain1',
+          configCors: { ...configCorsDefault, whitelist: 'domain1,domain2' },
+        },
+      ];
+      testCases.forEach(({ test, requestOrigin, configCors }) => {
+        describe(`with requestOrigin ${test}`, () => {
+          beforeEach(() => {
+            config.cors = configCors;
+          });
 
-        beforeEach(() => {
-          config.cors = { ...configCorsDefault };
-          options = getCorsOptions();
+          it('calls callback with "null, true"', () => {
+            const options = getCorsOptions();
+            // @ts-ignore
+            options.origin(requestOrigin, callback);
 
-          // @ts-ignore
-          options.origin(requestOrigin, callback);
-        });
-
-        it('calls callback with null, true', () => {
-          expect(callback).toHaveBeenCalledWith(null, true);
-        });
-      });
-
-      describe('with requestOrigin matching in whitelist', () => {
-        const requestOrigin = 'domain1';
-
-        beforeEach(() => {
-          config.cors = { ...configCorsDefault, whitelist: 'domain1,domain2' };
-          options = getCorsOptions();
-
-          // @ts-ignore
-          options.origin(requestOrigin, callback);
-        });
-
-        it('calls callback with null, true', () => {
-          expect(callback).toHaveBeenCalledWith(null, true);
+            expect(callback).toHaveBeenCalledWith(null, true);
+          });
         });
       });
 
@@ -66,13 +70,13 @@ describe('Cors Middleware', () => {
 
         beforeEach(() => {
           config.cors = { ...configCorsDefault, whitelist: 'domain1,domain2' };
-          options = getCorsOptions();
-
-          // @ts-ignore
-          options.origin(requestOrigin, callback);
         });
 
         it('calls callback with Error', () => {
+          const options = getCorsOptions();
+          // @ts-ignore
+          options.origin(requestOrigin, callback);
+
           expect(callback).toHaveBeenCalledWith(new Error('Not allowed by CORS'));
         });
       });
