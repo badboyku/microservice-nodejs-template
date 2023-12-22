@@ -1,60 +1,135 @@
-import { healthController } from '@controllers';
-import { healthService } from '@services';
+import {healthController} from '@controllers';
+import {healthService} from '@services';
 
 jest.mock('@services/healthService');
 jest.mock('@utils/logger');
 
 describe('Health Controller', () => {
   describe('calls function checkHealth', () => {
+    const healthServiceCheckHealthMock = jest.mocked(healthService.checkHealth);
     const req = {};
     const res = { status: jest.fn(), json: jest.fn() };
     const next = jest.fn();
 
     describe('successfully', () => {
-      const data = { status: 'ok' };
+      const data = { foo: 'bar' };
 
       beforeEach(() => {
-        jest.spyOn(healthService, 'checkHealth').mockReturnValue({ data });
-
-        healthController.checkHealth(req as never, res as never, next);
+        healthServiceCheckHealthMock.mockReturnValueOnce({ data } as never);
       });
 
-      afterEach(() => {
+      afterAll(() => {
         jest.restoreAllMocks();
       });
 
       it('calls healthService.checkHealth', () => {
-        expect(healthService.checkHealth).toHaveBeenCalledWith();
+        healthController.checkHealth(req as never, res as never, next as never);
+
+        expect(healthServiceCheckHealthMock).toHaveBeenCalled();
       });
 
-      it('sets status on response with 200', () => {
+      it('calls res.status with 200', () => {
+        healthController.checkHealth(req as never, res as never, next as never);
+
         expect(res.status).toHaveBeenCalledWith(200);
       });
 
-      it('sets json on response with data', () => {
+      it('calls res.json with ok=true and data', () => {
+        healthController.checkHealth(req as never, res as never, next as never);
+
         expect(res.json).toHaveBeenCalledWith({ ok: true, data });
       });
     });
 
-    describe('with error', () => {
-      const error = { code: 400, message: 'foo bar' };
-
+    describe('with no error, and no data', () => {
       beforeEach(() => {
-        jest.spyOn(healthService, 'checkHealth').mockReturnValue({ error });
-
-        healthController.checkHealth(req as never, res as never, next);
+        healthServiceCheckHealthMock.mockReturnValueOnce({} as never);
       });
 
-      afterEach(() => {
+      afterAll(() => {
         jest.restoreAllMocks();
       });
 
-      it('sets status on response with error code', () => {
+      it('calls res.status with 200', () => {
+        healthController.checkHealth(req as never, res as never, next as never);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+      });
+
+      it('calls res.json with ok=true and data=undefined', () => {
+        healthController.checkHealth(req as never, res as never, next as never);
+
+        expect(res.json).toHaveBeenCalledWith({ ok: true, data: undefined });
+      });
+    });
+
+    describe('with error containing code and message', () => {
+      const error = { code: 500, message: 'foo bar' };
+
+      beforeEach(() => {
+        healthServiceCheckHealthMock.mockReturnValueOnce({ error } as never);
+      });
+
+      afterAll(() => {
+        jest.restoreAllMocks();
+      });
+
+      it('calls res.status with error.code', () => {
+        healthController.checkHealth(req as never, res as never, next as never);
+
         expect(res.status).toHaveBeenCalledWith(error.code);
       });
 
-      it('sets json on response with error message', () => {
+      it('calls res.json with ok=false and error=error.message', () => {
+        healthController.checkHealth(req as never, res as never, next as never);
+
         expect(res.json).toHaveBeenCalledWith({ ok: false, error: error.message });
+      });
+    });
+
+    describe('with error containing no code and no message', () => {
+      beforeEach(() => {
+        healthServiceCheckHealthMock.mockReturnValueOnce({ error: {} } as never);
+      });
+
+      afterAll(() => {
+        jest.restoreAllMocks();
+      });
+
+      it('calls res.status with 200', () => {
+        healthController.checkHealth(req as never, res as never, next as never);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+      });
+
+      it('calls res.json with ok=false and error=undefined', () => {
+        healthController.checkHealth(req as never, res as never, next as never);
+
+        expect(res.json).toHaveBeenCalledWith({ ok: false, error: undefined });
+      });
+    });
+
+    describe('with error containing no code and no message, and data', () => {
+      const data = { foo: 'bar' };
+
+      beforeEach(() => {
+        healthServiceCheckHealthMock.mockReturnValueOnce({ data, error: {} } as never);
+      });
+
+      afterAll(() => {
+        jest.restoreAllMocks();
+      });
+
+      it('calls res.status with 200', () => {
+        healthController.checkHealth(req as never, res as never, next as never);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+      });
+
+      it('calls res.json with ok=false and error=data', () => {
+        healthController.checkHealth(req as never, res as never, next as never);
+
+        expect(res.json).toHaveBeenCalledWith({ ok: false, error: data });
       });
     });
 
@@ -62,18 +137,18 @@ describe('Health Controller', () => {
       const error = new Error('Foo Bar');
 
       beforeEach(() => {
-        jest.spyOn(healthService, 'checkHealth').mockImplementation(() => {
+        healthServiceCheckHealthMock.mockImplementation(() => {
           throw error;
         });
-
-        healthController.checkHealth(req as never, res as never, next);
       });
 
-      afterEach(() => {
+      afterAll(() => {
         jest.restoreAllMocks();
       });
 
       it('calls next with error', () => {
+        healthController.checkHealth(req as never, res as never, next as never);
+
         expect(next).toHaveBeenCalledWith(error);
       });
     });

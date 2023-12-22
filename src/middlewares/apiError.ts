@@ -1,6 +1,6 @@
-import { UnauthorizedError } from '@errors';
-import { config, logger } from '@utils';
-import type { NextFunction, Request, Response } from 'express';
+import {UnauthorizedError} from '@errors';
+import {config, logger} from '@utils';
+import type {NextFunction, Request, Response} from 'express';
 
 const handleError = (err: Error, _req: Request, res: Response, _next: NextFunction) => {
   const { name, message } = err;
@@ -39,7 +39,10 @@ const logError = (err: Error, req: Request, _res: Response, next: NextFunction) 
   const { name, message: errMsg, stack } = err;
 
   const message = 'Error handling API request';
-  const context = { req: { headers, method, url, params, query, body }, err: { name, message: errMsg, stack } };
+  const context = {
+    req: { headers, method, url, params, query, body },
+    err: { name, message: errMsg, stack },
+  };
   logger.warn(message, context);
 
   next(err);

@@ -1,11 +1,12 @@
 import correlator from 'express-correlation-id';
-import { logReqRes } from '@middlewares/morgan';
-import { config } from '@utils';
+import {logReqRes} from '@middlewares/morgan';
+import {config} from '@utils';
 
 jest.mock('@utils/config');
 
 describe('Morgan Middleware', () => {
   const configAppDefault = { logLevel: '', logOutputFormat: '', name: '', nodeEnv: '', port: 0, version: '' };
+  const correlatorGetIdMock = jest.mocked(correlator.getId);
 
   describe('calls function logReqRes', () => {
     const correlationId = 'correlationId';
@@ -18,6 +19,7 @@ describe('Morgan Middleware', () => {
     const contentLength = 'contentLength';
     const responseTime = 'responseTime';
     const totalTime = 'totalTime';
+
     const tokens = {
       method: () => method,
       url: () => url,
@@ -31,41 +33,64 @@ describe('Morgan Middleware', () => {
     };
     const req = {};
     const res = {};
-    const severity = 'INFO';
-    const message = 'API request received/response sent';
-    const context = {
-      req: { method, url, ip: remoteAddr, referrer, userAgent },
-      res: { status, contentLength: `${contentLength} B`, time: `${responseTime} ms` },
-      totalTime: `${totalTime} ms`,
-    };
-    const log = { correlationId, severity, message, context };
 
-    const testCases = [
-      { test: 'successfully', configApp: configAppDefault, expected: JSON.stringify(log) },
-      {
-        test: 'with logOutputFormat=DEV',
-        configApp: { ...configAppDefault, logOutputFormat: 'DEV' },
-        expected: JSON.stringify(log, null, 4),
+    const log = {
+      correlationId,
+      severity: 'INFO',
+      message: 'API request received/response sent',
+      context: {
+        req: { method, url, ip: remoteAddr, referrer, userAgent },
+        res: { status, contentLength: `${contentLength} B`, time: `${responseTime} ms` },
+        totalTime: `${totalTime} ms`,
       },
-    ];
-    testCases.forEach(({ test, configApp, expected }) => {
-      describe(`${test}`, () => {
-        let result: string;
+    };
+    const logStringified = 'logStringified';
 
-        beforeEach(() => {
-          config.app = configApp;
-          jest.spyOn(correlator, 'getId').mockReturnValue(correlationId);
+    describe('successfully', () => {
+      beforeEach(() => {
+        correlatorGetIdMock.mockReturnValueOnce(correlationId);
+        jest.spyOn(JSON, 'stringify').mockReturnValueOnce(logStringified);
+        config.app = configAppDefault;
+      });
 
-          result = logReqRes(tokens as never, req as never, res as never);
-        });
+      afterEach(() => {
+        jest.restoreAllMocks();
+      });
 
-        afterEach(() => {
-          jest.restoreAllMocks();
-        });
+      it('calls correlator.getId', () => {
+        logReqRes(tokens as never, req as never, res as never);
 
-        it('returns log stringified', () => {
-          expect(result).toEqual(expected);
-        });
+        expect(correlatorGetIdMock).toHaveBeenCalled();
+      });
+
+      it('calls JSON.stringify', () => {
+        logReqRes(tokens as never, req as never, res as never);
+
+        expect(JSON.stringify).toHaveBeenCalledWith(log);
+      });
+
+      it('returns log stringified', () => {
+        const result = logReqRes(tokens as never, req as never, res as never);
+
+        expect(result).toEqual(logStringified);
+      });
+    });
+
+    describe('with logOutputFormat=DEV', () => {
+      beforeEach(() => {
+        config.app = { ...configAppDefault, logOutputFormat: 'DEV' };
+        correlatorGetIdMock.mockReturnValueOnce(correlationId);
+        jest.spyOn(JSON, 'stringify').mockReturnValueOnce(logStringified);
+      });
+
+      afterEach(() => {
+        jest.restoreAllMocks();
+      });
+
+      it('calls JSON.stringify with spaces', () => {
+        logReqRes(tokens as never, req as never, res as never);
+
+        expect(JSON.stringify).toHaveBeenCalledWith(log, null, 4);
       });
     });
   });
