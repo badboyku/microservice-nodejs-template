@@ -1,5 +1,5 @@
 import { middleware, serdes } from 'express-openapi-validator';
-import { logger } from '@utils';
+import logger from 'utils/logger';
 import type { Request } from 'express';
 import type { InternalServerError } from 'express-openapi-validator/dist/framework/types';
 import type { OpenApiValidatorOpts } from 'express-openapi-validator/dist/openapi.validator';

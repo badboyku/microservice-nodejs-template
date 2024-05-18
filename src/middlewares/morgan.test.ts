@@ -1,8 +1,8 @@
 import correlator from 'express-correlation-id';
-import { logReqRes } from '@middlewares/morgan';
-import { config } from '@utils';
+import config from 'utils/config';
+import { logReqRes } from './morgan';
 
-jest.mock('@utils/config');
+jest.mock('utils/config');
 
 describe('Morgan Middleware', () => {
   const configAppDefault = { logLevel: '', logOutputFormat: '', name: '', nodeEnv: '', port: 0, version: '' };

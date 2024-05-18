@@ -1,4 +1,4 @@
-import { ValidationError } from '@errors';
+import ValidationError from './validationError';
 
 describe('ValidationError error', () => {
   const message = 'message';

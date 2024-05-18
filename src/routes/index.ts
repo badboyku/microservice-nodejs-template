@@ -1,9 +1,9 @@
 /* istanbul ignore file */
 import { Router } from 'express';
-import { apiError } from '@middlewares';
-import healthRoute from '@routes/healthRoute';
-import openApiRoute from '@routes/openApiRoute';
-import { config } from '@utils';
+import apiError from 'middlewares/apiError';
+import config from 'utils/config';
+import healthRoute from './healthRoute';
+import openApiRoute from './openApiRoute';
 
 const route = Router();
 

@@ -1,4 +1,4 @@
-import { NotFoundError } from '@errors';
+import NotFoundError from './notFoundError';
 
 describe('NotFoundError error', () => {
   const message = 'message';

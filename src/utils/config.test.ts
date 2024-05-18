@@ -1,5 +1,5 @@
 import process from 'node:process';
-import type { Config } from '@types';
+import type { Config } from 'types';
 
 describe('Config Util', () => {
   const ENV_BACKUP = process.env;

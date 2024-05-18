@@ -1,5 +1,5 @@
 import cors from 'cors';
-import { config } from '@utils';
+import config from 'utils/config';
 import type { CorsOptions } from 'cors';
 
 export const getCorsOptions = (): CorsOptions => ({

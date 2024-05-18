@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 import { Router } from 'express';
-import { healthController } from '@controllers';
+import healthController from 'controllers/healthController';
 
 const route = Router();
 

@@ -1,0 +1,30 @@
+module.exports = {
+  roots: ['<rootDir>/src/'],
+  collectCoverageFrom: [
+    'src/**/*.{js,ts}',
+    '!src/**/*.d.ts',
+    '!src/**/*/index.ts',
+    '!src/middlewares/correlator.ts',
+    '!src/routes/**/*.{js,ts}',
+    '!src/utils/constants.ts',
+    '!src/index.ts',
+  ],
+  coverageDirectory: 'test_coverage',
+  coverageThreshold: { global: { branches: 80, functions: 80, lines: 80, statements: 80 } },
+  moduleNameMapper: {
+    '^controllers/(.*)': '<rootDir>/src/controllers/$1',
+    '^errors/(.*)': '<rootDir>/src/errors/$1',
+    '^middlewares/(.*)': '<rootDir>/src/middlewares/$1',
+    '^routes/(.*)': '<rootDir>/src/routes/$1',
+    '^services/(.*)': '<rootDir>/src/services/$1',
+    '^types': '<rootDir>/src/@types/global.d.ts',
+    '^utils/(.*)': '<rootDir>/src/utils/$1',
+  },
+  resetMocks: true,
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  testTimeout: 10000,
+  transform: {
+    '^.+\\.(ts)$': 'ts-jest',
+  },
+  watchPlugins: ['jest-watch-typeahead/filename', 'jest-watch-typeahead/testname'],
+};

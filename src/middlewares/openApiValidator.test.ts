@@ -1,9 +1,9 @@
-import { getValidatorOptions } from '@middlewares/openApiValidator';
-import { logger } from '@utils';
+import logger from 'utils/logger';
+import { getValidatorOptions } from './openApiValidator';
 import type { ValidateRequestOpts, ValidateResponseOpts } from 'express-openapi-validator/dist/framework/types';
 import type { OpenApiValidatorOpts } from 'express-openapi-validator/dist/openapi.validator';
 
-jest.mock('@utils/logger');
+jest.mock('utils/logger');
 
 describe('OpenApiValidator Middleware', () => {
   describe('calls function getValidatorOptions', () => {

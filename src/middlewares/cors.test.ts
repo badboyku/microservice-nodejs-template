@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { getCorsOptions } from '@middlewares/cors';
-import { config } from '@utils';
+import config from 'utils/config';
+import { getCorsOptions } from './cors';
 
-jest.mock('@utils/config');
+jest.mock('utils/config');
 
 describe('Cors Middleware', () => {
   const configCorsDefault = { allowedHeaders: '', credentials: false, whitelist: '' };

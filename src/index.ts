@@ -1,8 +1,14 @@
 /* istanbul ignore file */
 import express, { json, urlencoded } from 'express';
-import { apiError, correlator, cors, helmet, morgan, openApiValidator } from '@middlewares';
-import routes from '@routes';
-import { config, logger } from '@utils';
+import apiError from 'middlewares/apiError';
+import correlator from 'middlewares/correlator';
+import cors from 'middlewares/cors';
+import helmet from 'middlewares/helmet';
+import morgan from 'middlewares/morgan';
+import openApiValidator from 'middlewares/openApiValidator';
+import routes from 'routes/index';
+import config from 'utils/config';
+import logger from 'utils/logger';
 
 // Create app
 const app = express();
