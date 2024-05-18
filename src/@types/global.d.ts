@@ -1,9 +1,10 @@
-/** Services Types */
-export type ServiceError = { code: number; message: string };
+import type { OpenApiRequestMetadata } from 'express-openapi-validator/dist/framework/types';
 
-export type CheckHealthResult = { data?: { status: string }; error?: ServiceError };
+/** services types */
+// health
+export type CheckHealthResult = { data?: { status: string } };
 
-/** Utils Types */
+/** utils types */
 // config
 export type Config = {
   app: { logLevel: string; logOutputFormat: string; name: string; nodeEnv: string; port: number; version: string };
@@ -22,7 +23,8 @@ export type Logger = {
 declare global {
   namespace Express {
     export interface Request {
-      swaggerDoc: { [k: string]: unknown };
+      openapi?: OpenApiRequestMetadata;
+      swaggerDoc?: { [k: string]: unknown };
     }
   }
 }

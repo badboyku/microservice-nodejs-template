@@ -1,9 +1,12 @@
-import { NotFoundError, UnauthorizedError, ValidationError } from '@errors';
-import { apiError } from '@middlewares';
-import { config, logger } from '@utils';
+import NotFoundError from 'errors/notFoundError';
+import UnauthorizedError from 'errors/unauthorizedError';
+import ValidationError from 'errors/validationError';
+import config from 'utils/config';
+import logger from 'utils/logger';
+import apiError from './apiError';
 
-jest.mock('@utils/config');
-jest.mock('@utils/logger');
+jest.mock('utils/config');
+jest.mock('utils/logger');
 
 describe('ApiError Middleware', () => {
   const configAppDefault = { logLevel: '', logOutputFormat: '', name: '', nodeEnv: '', port: 0, version: '' };

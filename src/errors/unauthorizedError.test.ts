@@ -1,4 +1,4 @@
-import { UnauthorizedError } from '@errors';
+import UnauthorizedError from './unauthorizedError';
 
 describe('UnauthorizedError error', () => {
   const message = 'message';

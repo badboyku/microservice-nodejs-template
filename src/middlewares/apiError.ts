@@ -1,5 +1,6 @@
-import { UnauthorizedError } from '@errors';
-import { config, logger } from '@utils';
+import UnauthorizedError from 'errors/unauthorizedError';
+import config from 'utils/config';
+import logger from 'utils/logger';
 import type { NextFunction, Request, Response } from 'express';
 
 const handleError = (err: Error, _req: Request, res: Response, _next: NextFunction) => {
