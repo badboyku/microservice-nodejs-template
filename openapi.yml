@@ -3,6 +3,8 @@ info:
   # Title and Version get overwritten in the api-docs route
   title: ''
   version: ''
+security:
+  - bearerAuth: []
 paths:
   /health:
     get:
@@ -10,6 +12,7 @@ paths:
       description: Check app health status
       operationId: getHealth
       tags: ['health']
+      security: []
       responses:
         '200':
           description: OK
@@ -68,3 +71,9 @@ components:
             status:
               type: string
               example: ok
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

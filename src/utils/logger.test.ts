@@ -20,19 +20,27 @@ describe('Logger Util', () => {
   };
   const correlatorGetIdMock = jest.mocked(correlator.getId);
 
+  beforeEach(() => {
+    correlatorGetIdMock.mockReturnValueOnce(correlationId);
+    jest.spyOn(JSON, 'stringify').mockReturnValueOnce(logMessage);
+    jest.spyOn(console, 'debug').mockImplementationOnce(() => {
+      // Do nothing.
+    });
+    jest.spyOn(console, 'info').mockImplementationOnce(() => {
+      // Do nothing.
+    });
+    jest.spyOn(console, 'warn').mockImplementationOnce(() => {
+      // Do nothing.
+    });
+    jest.spyOn(console, 'error').mockImplementationOnce(() => {
+      // Do nothing.
+    });
+  });
+
   describe('calling function debug', () => {
     describe('successfully', () => {
       beforeEach(() => {
         config.app = { ...configAppDefault, logLevel: 'DEBUG' };
-        correlatorGetIdMock.mockReturnValueOnce(correlationId);
-        jest.spyOn(JSON, 'stringify').mockReturnValueOnce(logMessage);
-        jest.spyOn(console, 'debug').mockImplementationOnce(() => {
-          // Do nothing.
-        });
-      });
-
-      afterAll(() => {
-        jest.restoreAllMocks();
       });
 
       it('calls correlator.getId', () => {
@@ -55,20 +63,9 @@ describe('Logger Util', () => {
     });
 
     describe('with logOutputFormat=DEV', () => {
-      beforeEach(() => {
-        config.app = { ...configAppDefault, logLevel: 'DEBUG', logOutputFormat: 'DEV' };
-        correlatorGetIdMock.mockReturnValueOnce(correlationId);
-        jest.spyOn(JSON, 'stringify').mockReturnValueOnce(logMessage);
-        jest.spyOn(console, 'debug').mockImplementationOnce(() => {
-          // Do nothing.
-        });
-      });
-
-      afterAll(() => {
-        jest.restoreAllMocks();
-      });
-
       it('calls JSON.stringify with spaces', () => {
+        config.app = { ...configAppDefault, logLevel: 'DEBUG', logOutputFormat: 'DEV' };
+
         logger.debug(message, context);
 
         expect(JSON.stringify).toHaveBeenCalledWith({ correlationId, severity: 'DEBUG', message, context }, null, 4);
@@ -78,15 +75,6 @@ describe('Logger Util', () => {
     describe('with app log level higher than DEBUG', () => {
       beforeEach(() => {
         config.app = { ...configAppDefault, logLevel: 'ERROR' };
-        correlatorGetIdMock.mockReturnValueOnce(correlationId);
-        jest.spyOn(JSON, 'stringify').mockReturnValueOnce(logMessage);
-        jest.spyOn(console, 'debug').mockImplementationOnce(() => {
-          // Do nothing.
-        });
-      });
-
-      afterAll(() => {
-        jest.restoreAllMocks();
       });
 
       it('does not call JSON.stringify', () => {
@@ -107,15 +95,6 @@ describe('Logger Util', () => {
     describe('successfully', () => {
       beforeEach(() => {
         config.app = { ...configAppDefault, logLevel: 'INFO' };
-        correlatorGetIdMock.mockReturnValueOnce(correlationId);
-        jest.spyOn(JSON, 'stringify').mockReturnValueOnce(logMessage);
-        jest.spyOn(console, 'info').mockImplementationOnce(() => {
-          // Do nothing.
-        });
-      });
-
-      afterAll(() => {
-        jest.restoreAllMocks();
       });
 
       it('calls correlator.getId', () => {
@@ -138,20 +117,9 @@ describe('Logger Util', () => {
     });
 
     describe('with logOutputFormat=DEV', () => {
-      beforeEach(() => {
-        config.app = { ...configAppDefault, logLevel: 'INFO', logOutputFormat: 'DEV' };
-        correlatorGetIdMock.mockReturnValueOnce(correlationId);
-        jest.spyOn(JSON, 'stringify').mockReturnValueOnce(logMessage);
-        jest.spyOn(console, 'info').mockImplementationOnce(() => {
-          // Do nothing.
-        });
-      });
-
-      afterAll(() => {
-        jest.restoreAllMocks();
-      });
-
       it('calls JSON.stringify with spaces', () => {
+        config.app = { ...configAppDefault, logLevel: 'INFO', logOutputFormat: 'DEV' };
+
         logger.info(message, context);
 
         expect(JSON.stringify).toHaveBeenCalledWith({ correlationId, severity: 'INFO', message, context }, null, 4);
@@ -161,15 +129,6 @@ describe('Logger Util', () => {
     describe('with app log level higher than INFO', () => {
       beforeEach(() => {
         config.app = { ...configAppDefault, logLevel: 'ERROR' };
-        correlatorGetIdMock.mockReturnValueOnce(correlationId);
-        jest.spyOn(JSON, 'stringify').mockReturnValueOnce(logMessage);
-        jest.spyOn(console, 'info').mockImplementationOnce(() => {
-          // Do nothing.
-        });
-      });
-
-      afterAll(() => {
-        jest.restoreAllMocks();
       });
 
       it('does not call JSON.stringify', () => {
@@ -190,15 +149,6 @@ describe('Logger Util', () => {
     describe('successfully', () => {
       beforeEach(() => {
         config.app = { ...configAppDefault, logLevel: 'WARN' };
-        correlatorGetIdMock.mockReturnValueOnce(correlationId);
-        jest.spyOn(JSON, 'stringify').mockReturnValueOnce(logMessage);
-        jest.spyOn(console, 'warn').mockImplementationOnce(() => {
-          // Do nothing.
-        });
-      });
-
-      afterAll(() => {
-        jest.restoreAllMocks();
       });
 
       it('calls correlator.getId', () => {
@@ -221,16 +171,9 @@ describe('Logger Util', () => {
     });
 
     describe('with logOutputFormat=DEV', () => {
-      beforeEach(() => {
-        config.app = { ...configAppDefault, logLevel: 'WARN', logOutputFormat: 'DEV' };
-        correlatorGetIdMock.mockReturnValueOnce(correlationId);
-        jest.spyOn(JSON, 'stringify').mockReturnValueOnce(logMessage);
-        jest.spyOn(console, 'warn').mockImplementationOnce(() => {
-          // Do nothing.
-        });
-      });
-
       it('calls JSON.stringify with spaces', () => {
+        config.app = { ...configAppDefault, logLevel: 'WARN', logOutputFormat: 'DEV' };
+
         logger.warn(message, context);
 
         expect(JSON.stringify).toHaveBeenCalledWith({ correlationId, severity: 'WARN', message, context }, null, 4);
@@ -240,11 +183,6 @@ describe('Logger Util', () => {
     describe('with app log level higher than WARN', () => {
       beforeEach(() => {
         config.app = { ...configAppDefault, logLevel: 'ERROR' };
-        correlatorGetIdMock.mockReturnValueOnce(correlationId);
-        jest.spyOn(JSON, 'stringify').mockReturnValueOnce(logMessage);
-        jest.spyOn(console, 'warn').mockImplementationOnce(() => {
-          // Do nothing.
-        });
       });
 
       it('does not call JSON.stringify', () => {
@@ -265,15 +203,6 @@ describe('Logger Util', () => {
     describe('successfully', () => {
       beforeEach(() => {
         config.app = { ...configAppDefault, logLevel: 'ERROR' };
-        correlatorGetIdMock.mockReturnValueOnce(correlationId);
-        jest.spyOn(JSON, 'stringify').mockReturnValueOnce(logMessage);
-        jest.spyOn(console, 'error').mockImplementationOnce(() => {
-          // Do nothing.
-        });
-      });
-
-      afterAll(() => {
-        jest.restoreAllMocks();
       });
 
       it('calls correlator.getId', () => {
@@ -296,20 +225,9 @@ describe('Logger Util', () => {
     });
 
     describe('with logOutputFormat=DEV', () => {
-      beforeEach(() => {
-        config.app = { ...configAppDefault, logLevel: 'ERROR', logOutputFormat: 'DEV' };
-        correlatorGetIdMock.mockReturnValueOnce(correlationId);
-        jest.spyOn(JSON, 'stringify').mockReturnValueOnce(logMessage);
-        jest.spyOn(console, 'error').mockImplementationOnce(() => {
-          // Do nothing.
-        });
-      });
-
-      afterAll(() => {
-        jest.restoreAllMocks();
-      });
-
       it('calls JSON.stringify with spaces', () => {
+        config.app = { ...configAppDefault, logLevel: 'ERROR', logOutputFormat: 'DEV' };
+
         logger.error(message, context);
 
         expect(JSON.stringify).toHaveBeenCalledWith({ correlationId, severity: 'ERROR', message, context }, null, 4);

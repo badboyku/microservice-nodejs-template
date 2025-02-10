@@ -19,7 +19,7 @@
       "routes/*": ["./src/routes/*"],
       "services/*": ["./src/services/*"],
       "types": ["./src/@types/global.d.ts"],
-      "utils/*": ["./src/utils/*"],
+      "utils/*": ["./src/utils/*"]
     },
     "preserveConstEnums": true,
     "removeComments": true,
