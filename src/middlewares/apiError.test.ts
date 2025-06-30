@@ -11,22 +11,30 @@ jest.mock('utils/logger');
 describe('ApiError Middleware', () => {
   const configAppDefault = { logLevel: '', logOutputFormat: '', name: '', nodeEnv: '', port: 0, version: '' };
   const configAppDev = { ...configAppDefault, nodeEnv: 'DEVELOPMENT' };
+  const next = jest.fn();
+
+  const loggerWarnMock = jest.mocked(logger.warn);
 
   describe('calls function handleError', () => {
-    const badRequestError = { name: 'Bad Request', message: 'Bad Request error' };
+    // 400s
+    const badRequestOpenApiError = { name: 'Bad Request', message: 'No' };
+    const validationError = new ValidationError('ValidationError');
+    // 401s
+    const notFoundOpenApiError = { name: 'Not Found', message: 'not found' };
+    const unauthorizedError = new UnauthorizedError('UnauthorizedError');
+    const unauthorizedErrorOpenApiError = { name: 'Unauthorized', message: 'No' };
+    // 404s
+    const notFoundError = new NotFoundError('NotFoundError');
+    // 500s
     const fooErr = new Error('Foo');
-    const notFoundError = new NotFoundError('NotFound error');
-    const unauthorizedError1 = { name: 'Unauthorized', message: 'Unauthorized error' };
-    const unauthorizedError2 = new UnauthorizedError('Unauthorized error');
-    const validationError = new ValidationError('Validation error');
 
     const testCases = [
       {
-        test: 'Bad Request',
-        err: badRequestError,
+        test: 'Bad Request (OpenApiValidation error)',
+        err: badRequestOpenApiError,
         configApp: configAppDefault,
         code: 400,
-        error: badRequestError.message,
+        error: badRequestOpenApiError.message,
       },
       {
         test: 'ValidationError',
@@ -36,32 +44,46 @@ describe('ApiError Middleware', () => {
         error: validationError.message,
       },
       {
-        test: 'Unauthorized',
-        err: unauthorizedError1,
+        test: 'Not Found (OpenApiValidation error)',
+        err: notFoundOpenApiError,
         configApp: configAppDefault,
         code: 401,
         error: 'Unauthorized',
       },
       {
-        test: 'Unauthorized and nodeEnv=DEVELOPMENT',
-        err: unauthorizedError1,
+        test: 'Not Found (OpenApiValidation error) and nodeEnv=DEVELOPMENT',
+        err: notFoundOpenApiError,
         configApp: configAppDev,
         code: 401,
-        error: unauthorizedError1.message,
+        error: notFoundOpenApiError.message,
+      },
+      {
+        test: 'Unauthorized (OpenApiValidation error)',
+        err: unauthorizedErrorOpenApiError,
+        configApp: configAppDefault,
+        code: 401,
+        error: 'Unauthorized',
+      },
+      {
+        test: 'Unauthorized (OpenApiValidation error) and nodeEnv=DEVELOPMENT',
+        err: unauthorizedErrorOpenApiError,
+        configApp: configAppDev,
+        code: 401,
+        error: unauthorizedErrorOpenApiError.message,
       },
       {
         test: 'UnauthorizedError',
-        err: unauthorizedError2,
+        err: unauthorizedError,
         configApp: configAppDefault,
         code: 401,
         error: 'Unauthorized',
       },
       {
         test: 'UnauthorizedError and nodeEnv=DEVELOPMENT',
-        err: unauthorizedError2,
+        err: unauthorizedError,
         configApp: configAppDev,
         code: 401,
-        error: unauthorizedError2.message,
+        error: unauthorizedError.message,
       },
       {
         test: 'NotFoundError',
@@ -89,23 +111,24 @@ describe('ApiError Middleware', () => {
       describe(`successfully with ${test}`, () => {
         const req = {};
         const res = { status: jest.fn(), json: jest.fn() };
-        const next = jest.fn();
 
         beforeEach(() => {
           config.app = configApp;
-
-          apiError.handleError(err, req as never, res as never, next);
         });
 
-        afterEach(() => {
+        afterAll(() => {
           jest.restoreAllMocks();
         });
 
         it('sets status on response', () => {
+          apiError.handleError(err, req as never, res as never, next);
+
           expect(res.status).toHaveBeenCalledWith(code);
         });
 
         it('sets json on response', () => {
+          apiError.handleError(err, req as never, res as never, next);
+
           expect(res.json).toHaveBeenCalledWith({ ok: false, error });
         });
       });
@@ -124,23 +147,16 @@ describe('ApiError Middleware', () => {
         body: 'body',
       };
       const res = {};
-      const next = jest.fn();
-
-      beforeEach(() => {
-        jest.spyOn(logger, 'warn');
-
-        apiError.logError(err, req as never, res as never, next);
-      });
-
-      afterEach(() => {
-        jest.restoreAllMocks();
-      });
 
       it('calls logger.warn', () => {
-        expect(logger.warn).toHaveBeenCalledWith('Error handling API request', { req, err });
+        apiError.logError(err, req as never, res as never, next);
+
+        expect(loggerWarnMock).toHaveBeenCalledWith('Error handling API request', { req, err });
       });
 
       it('calls next with error', () => {
+        apiError.logError(err, req as never, res as never, next);
+
         expect(next).toHaveBeenCalledWith(err);
       });
     });
@@ -150,13 +166,10 @@ describe('ApiError Middleware', () => {
     describe('successfully', () => {
       const req = {};
       const res = { status: jest.fn(), json: jest.fn() };
-      const next = jest.fn();
-
-      beforeEach(() => {
-        apiError.notAuthorized(req as never, res as never, next);
-      });
 
       it('calls next with UnauthorizedError', () => {
+        apiError.notAuthorized(req as never, res as never, next);
+
         expect(next).toHaveBeenCalledWith(new UnauthorizedError('Unauthorized'));
       });
     });

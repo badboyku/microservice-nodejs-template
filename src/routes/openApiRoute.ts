@@ -36,6 +36,8 @@ const route = Router();
 
 route.use('/', updateSwaggerDoc, swaggerUi.serveFiles(undefined, swaggerUiOptions));
 route.get('/', updateSwaggerDoc, swaggerUi.setup(undefined, swaggerUiOptions, swaggerOptions));
-route.get('/swagger.json', updateSwaggerDoc, (req, res) => res.json(req.swaggerDoc));
+route.get('/swagger.json', updateSwaggerDoc, (req: Request, res: Response, _next: NextFunction) => {
+  res.json(req.swaggerDoc);
+});
 
 export default route;

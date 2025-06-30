@@ -10,12 +10,13 @@ const handleError = (err: Error, _req: Request, res: Response, _next: NextFuncti
   let error: string;
 
   switch (name) {
-    case 'Bad Request':
+    case 'Bad Request': // (OpenApiValidation error)
     case 'ValidationError':
       code = 400;
       error = message;
       break;
-    case 'Unauthorized':
+    case 'Not Found': // (OpenApiValidation error)
+    case 'Unauthorized': // (OpenApiValidation error)
     case 'UnauthorizedError':
       code = 401;
       // Let's hide the unauthorized error message from production requests.
@@ -40,10 +41,7 @@ const logError = (err: Error, req: Request, _res: Response, next: NextFunction) 
   const { name, message: errMsg, stack } = err;
 
   const message = 'Error handling API request';
-  const context = {
-    req: { headers, method, url, params, query, body },
-    err: { name, message: errMsg, stack },
-  };
+  const context = { req: { headers, method, url, params, query, body }, err: { name, message: errMsg, stack } };
   logger.warn(message, context);
 
   next(err);
