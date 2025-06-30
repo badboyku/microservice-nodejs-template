@@ -1,7 +1,7 @@
 {
   "name": "microservice-nodejs-template",
   "description": "This is template repo for creating a node.js microservice.",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "author": "badboyku",
   "license": "MIT",
   "repository": {
@@ -55,7 +55,7 @@
     "@types/morgan": "^1.9.10",
     "@types/node": "^24.0.7",
     "@types/swagger-ui-express": "^4.1.8",
-    "eslint-config-badboyku": "^1.0.38",
+    "eslint-config-badboyku": "^1.0.39",
     "eslint-import-resolver-alias": "^1.1.2",
     "husky": "^9.1.7",
     "jest": "^30.0.3",
