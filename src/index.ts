@@ -17,7 +17,7 @@ app.disable('x-powered-by');
 // Add middlewares.
 app.use(helmet);
 app.use(correlator);
-app.options('*', cors); // Enabling cors pre-flight.
+app.options('*splat', cors); // Enabling cors pre-flight.
 app.use(cors);
 app.use(morgan);
 app.use(json({ type: 'application/json' }));

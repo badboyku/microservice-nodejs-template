@@ -1,70 +1,49 @@
 import logger from 'utils/logger';
-import { getValidatorOptions } from './openApiValidator';
-import type { ValidateRequestOpts, ValidateResponseOpts } from 'express-openapi-validator/dist/framework/types';
-import type { OpenApiValidatorOpts } from 'express-openapi-validator/dist/openapi.validator';
+import { getOpenApiValidatorOptions } from './openApiValidator';
+
+type OpenApiValidatorOpts = ReturnType<typeof getOpenApiValidatorOptions>;
+type ValidateResponseOpts = Exclude<OpenApiValidatorOpts['validateResponses'], boolean | undefined>;
 
 jest.mock('utils/logger');
 
 describe('OpenApiValidator Middleware', () => {
-  describe('calls function getValidatorOptions', () => {
-    let options: OpenApiValidatorOpts;
+  let options: OpenApiValidatorOpts;
 
-    describe('successfully', () => {
-      beforeEach(() => {
-        options = getValidatorOptions();
-      });
+  beforeEach(() => {
+    options = getOpenApiValidatorOptions();
+  });
 
-      it('returns apiSpec option', () => {
-        expect(options.apiSpec).toEqual('./openapi.yml');
-      });
+  it('returns apiSpec option', () => {
+    expect(options.apiSpec).toEqual('./openapi.yml');
+  });
 
-      it('returns ignorePaths option', () => {
-        expect(options.ignorePaths).toEqual(/api-docs/i);
-      });
+  it('returns ignorePaths option', () => {
+    expect(options.ignorePaths).toEqual(/api-docs/i);
+  });
 
-      it('returns validateRequests.removeAdditional option', () => {
-        const validateRequests = options.validateRequests as ValidateRequestOpts;
+  it('returns validateRequests.coerceTypes option', () => {
+    expect(options.validateRequests).toHaveProperty('coerceTypes', true);
+  });
 
-        expect(validateRequests?.removeAdditional).toEqual('all');
-      });
+  it('returns validateRequests.removeAdditional option', () => {
+    expect(options.validateRequests).toHaveProperty('removeAdditional', 'all');
+  });
 
-      it('returns validateRequests.validateResponses option', () => {
-        const validateResponses = options.validateResponses as ValidateResponseOpts;
+  it('returns validateRequests.validateResponses option', () => {
+    expect(options.validateResponses).toHaveProperty('removeAdditional', 'all');
+  });
 
-        expect(validateResponses?.removeAdditional).toEqual('all');
-      });
+  it('logs when response validation fails', () => {
+    const err = { errors: 'foo' };
+    const body = { data: 'hello' };
+    const req = { url: '/foo' };
 
-      it('returns serDes option', () => {
-        expect(options.serDes).toEqual([
-          { format: 'date-time', serialize: expect.any(Function) },
-          { format: 'date', serialize: expect.any(Function) },
-        ]);
-      });
-    });
+    (options.validateResponses as ValidateResponseOpts)?.onError?.(err as never, body, req as never);
 
-    describe('when calling onError from options', () => {
-      const error = { errors: [] };
-      const body = {};
-      const req = { url: 'url' };
-
-      beforeEach(() => {
-        jest.spyOn(logger, 'warn');
-
-        options = getValidatorOptions();
-        const validateResponses = options.validateResponses as ValidateResponseOpts;
-
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        validateResponses.onError(error as never, body, req as never);
-      });
-
-      it('calls logger.warn', () => {
-        expect(logger.warn).toHaveBeenCalledWith('API Response failed validation', {
-          errors: error.errors,
-          url: req.url,
-          body,
-        });
-      });
+    expect(logger.warn).toHaveBeenCalledWith('API Response failed validation', {
+      errors: err.errors,
+      url: req.url,
+      body,
     });
   });
 });
