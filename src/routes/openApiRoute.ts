@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-import fs from 'fs';
+import fs from 'node:fs';
 import { Router } from 'express';
 import swaggerUi from 'swagger-ui-express';
 import yaml from 'yaml';
@@ -36,8 +36,6 @@ const route = Router();
 
 route.use('/', updateSwaggerDoc, swaggerUi.serveFiles(undefined, swaggerUiOptions));
 route.get('/', updateSwaggerDoc, swaggerUi.setup(undefined, swaggerUiOptions, swaggerOptions));
-route.get('/swagger.json', updateSwaggerDoc, (req: Request, res: Response, _next: NextFunction) => {
-  res.json(req.swaggerDoc);
-});
+route.get('/swagger.json', updateSwaggerDoc, (req, res) => res.json(req.swaggerDoc));
 
 export default route;

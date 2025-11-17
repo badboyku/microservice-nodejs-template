@@ -5,27 +5,24 @@ jest.mock('services/healthService');
 jest.mock('utils/logger');
 
 describe('Health Controller', () => {
-  describe('calls function checkHealth', () => {
-    const healthServiceCheckHealthMock = jest.mocked(healthService.checkHealth);
-    const req = {};
-    const res = { status: jest.fn(), json: jest.fn() };
-    const next = jest.fn();
+  const req = {};
+  const res = { status: jest.fn(), json: jest.fn() };
+  const next = jest.fn();
 
+  const healthServiceMock = jest.mocked(healthService);
+
+  describe('calls function checkHealth', () => {
     describe('successfully', () => {
       const data = { status: 'ok' };
 
       beforeEach(() => {
-        healthServiceCheckHealthMock.mockReturnValue({ data });
-      });
-
-      afterAll(() => {
-        jest.restoreAllMocks();
+        healthServiceMock.checkHealth.mockReturnValue({ data });
       });
 
       it('calls healthService.checkHealth', () => {
         healthController.checkHealth(req as never, res as never, next);
 
-        expect(healthServiceCheckHealthMock).toHaveBeenCalled();
+        expect(healthServiceMock.checkHealth).toHaveBeenCalled();
       });
 
       it('calls res.status with 200', () => {
@@ -45,13 +42,9 @@ describe('Health Controller', () => {
       const error = new Error('Foo');
 
       beforeEach(() => {
-        healthServiceCheckHealthMock.mockImplementation(() => {
+        healthServiceMock.checkHealth.mockImplementation(() => {
           throw error;
         });
-      });
-
-      afterAll(() => {
-        jest.restoreAllMocks();
       });
 
       it('calls next with error', () => {

@@ -24,7 +24,13 @@ const getSeverityNum = (severity: string): number => {
 const skipLog = (severity: string): boolean => getSeverityNum(severity) < getSeverityNum(config.app.logLevel);
 
 const getLogMessage = (severity: string, message: string, context?: LogContext): string => {
-  const log = { correlationId: correlator.getId(), severity, message, context };
+  const log = {
+    timestamp: new Date().toISOString(),
+    correlationId: correlator.getId(),
+    severity,
+    message,
+    context,
+  };
 
   return config.app.logOutputFormat === LOG_FORMATS.DEV ? JSON.stringify(log, null, 4) : JSON.stringify(log);
 };

@@ -11,6 +11,8 @@ jest.mock('utils/logger');
 describe('ApiError Middleware', () => {
   const configAppDefault = { logLevel: '', logOutputFormat: '', name: '', nodeEnv: '', port: 0, version: '' };
   const configAppDev = { ...configAppDefault, nodeEnv: 'DEVELOPMENT' };
+  const req = { headers: 'headers', method: 'method', url: 'url', params: 'params', query: 'query', body: 'body' };
+  const res = { status: jest.fn(), json: jest.fn() };
   const next = jest.fn();
 
   const loggerWarnMock = jest.mocked(logger.warn);
@@ -109,15 +111,8 @@ describe('ApiError Middleware', () => {
     ];
     testCases.forEach(({ test, err, configApp, code, error }) => {
       describe(`successfully with ${test}`, () => {
-        const req = {};
-        const res = { status: jest.fn(), json: jest.fn() };
-
         beforeEach(() => {
           config.app = configApp;
-        });
-
-        afterAll(() => {
-          jest.restoreAllMocks();
         });
 
         it('sets status on response', () => {
@@ -136,18 +131,9 @@ describe('ApiError Middleware', () => {
   });
 
   describe('calls function logError', () => {
-    describe('successfully', () => {
-      const err = { name: 'name', message: 'message', stack: 'stack' };
-      const req = {
-        headers: 'headers',
-        method: 'method',
-        url: 'url',
-        params: 'params',
-        query: 'query',
-        body: 'body',
-      };
-      const res = {};
+    const err = { name: 'name', message: 'message', stack: 'stack' };
 
+    describe('successfully', () => {
       it('calls logger.warn', () => {
         apiError.logError(err, req as never, res as never, next);
 
@@ -164,9 +150,6 @@ describe('ApiError Middleware', () => {
 
   describe('calls function notAuthorized', () => {
     describe('successfully', () => {
-      const req = {};
-      const res = { status: jest.fn(), json: jest.fn() };
-
       it('calls next with UnauthorizedError', () => {
         apiError.notAuthorized(req as never, res as never, next);
 
