@@ -19,7 +19,6 @@ describe('Morgan Middleware', () => {
     const contentLength = 'contentLength';
     const responseTime = 'responseTime';
     const totalTime = 'totalTime';
-
     const tokens = {
       method: () => method,
       url: () => url,
@@ -33,7 +32,6 @@ describe('Morgan Middleware', () => {
     };
     const req = {};
     const res = {};
-
     const log = {
       correlationId,
       severity: 'INFO',
@@ -48,13 +46,9 @@ describe('Morgan Middleware', () => {
 
     describe('successfully', () => {
       beforeEach(() => {
+        config.app = configAppDefault;
         correlatorGetIdMock.mockReturnValueOnce(correlationId);
         jest.spyOn(JSON, 'stringify').mockReturnValueOnce(logStringified);
-        config.app = configAppDefault;
-      });
-
-      afterEach(() => {
-        jest.restoreAllMocks();
       });
 
       it('calls correlator.getId', () => {
@@ -81,10 +75,6 @@ describe('Morgan Middleware', () => {
         config.app = { ...configAppDefault, logOutputFormat: 'DEV' };
         correlatorGetIdMock.mockReturnValueOnce(correlationId);
         jest.spyOn(JSON, 'stringify').mockReturnValueOnce(logStringified);
-      });
-
-      afterEach(() => {
-        jest.restoreAllMocks();
       });
 
       it('calls JSON.stringify with spaces', () => {
