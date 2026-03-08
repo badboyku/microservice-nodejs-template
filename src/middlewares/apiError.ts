@@ -15,13 +15,13 @@ const handleError = (err: Error, _req: Request, res: Response, _next: NextFuncti
       code = 400;
       error = message;
       break;
-    case 'Not Found': // (OpenApiValidation error)
     case 'Unauthorized': // (OpenApiValidation error)
     case 'UnauthorizedError':
       code = 401;
       // Let's hide the unauthorized error message from production requests.
       error = isDev ? message : 'Unauthorized';
       break;
+    case 'Not Found': // (OpenApiValidation error)
     case 'NotFoundError':
       code = 404;
       error = message;

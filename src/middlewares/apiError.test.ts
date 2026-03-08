@@ -11,21 +11,26 @@ jest.mock('utils/logger');
 describe('ApiError Middleware', () => {
   const configAppDefault = { logLevel: '', logOutputFormat: '', name: '', nodeEnv: '', port: 0, version: '' };
   const configAppDev = { ...configAppDefault, nodeEnv: 'DEVELOPMENT' };
-  const req = { headers: 'headers', method: 'method', url: 'url', params: 'params', query: 'query', body: 'body' };
-  const res = { status: jest.fn(), json: jest.fn() };
+  const configAppBackup = config.app;
   const next = jest.fn();
 
   const loggerWarnMock = jest.mocked(logger.warn);
 
+  afterAll(() => {
+    config.app = configAppBackup;
+  });
+
   describe('calls function handleError', () => {
+    const req = {};
+    const res = { status: jest.fn(), json: jest.fn() };
     // 400s
     const badRequestOpenApiError = { name: 'Bad Request', message: 'No' };
     const validationError = new ValidationError('ValidationError');
     // 401s
-    const notFoundOpenApiError = { name: 'Not Found', message: 'not found' };
     const unauthorizedError = new UnauthorizedError('UnauthorizedError');
     const unauthorizedErrorOpenApiError = { name: 'Unauthorized', message: 'No' };
     // 404s
+    const notFoundOpenApiError = { name: 'Not Found', message: 'not found' };
     const notFoundError = new NotFoundError('NotFoundError');
     // 500s
     const fooErr = new Error('Foo');
@@ -44,20 +49,6 @@ describe('ApiError Middleware', () => {
         configApp: configAppDefault,
         code: 400,
         error: validationError.message,
-      },
-      {
-        test: 'Not Found (OpenApiValidation error)',
-        err: notFoundOpenApiError,
-        configApp: configAppDefault,
-        code: 401,
-        error: 'Unauthorized',
-      },
-      {
-        test: 'Not Found (OpenApiValidation error) and nodeEnv=DEVELOPMENT',
-        err: notFoundOpenApiError,
-        configApp: configAppDev,
-        code: 401,
-        error: notFoundOpenApiError.message,
       },
       {
         test: 'Unauthorized (OpenApiValidation error)',
@@ -86,6 +77,13 @@ describe('ApiError Middleware', () => {
         configApp: configAppDev,
         code: 401,
         error: unauthorizedError.message,
+      },
+      {
+        test: 'Not Found (OpenApiValidation error)',
+        err: notFoundOpenApiError,
+        configApp: configAppDefault,
+        code: 404,
+        error: notFoundOpenApiError.message,
       },
       {
         test: 'NotFoundError',
@@ -132,6 +130,8 @@ describe('ApiError Middleware', () => {
 
   describe('calls function logError', () => {
     const err = { name: 'name', message: 'message', stack: 'stack' };
+    const req = { headers: 'headers', method: 'method', url: 'url', params: 'params', query: 'query', body: 'body' };
+    const res = {};
 
     describe('successfully', () => {
       it('calls logger.warn', () => {
@@ -149,6 +149,9 @@ describe('ApiError Middleware', () => {
   });
 
   describe('calls function notAuthorized', () => {
+    const req = {};
+    const res = { status: jest.fn(), json: jest.fn() };
+
     describe('successfully', () => {
       it('calls next with UnauthorizedError', () => {
         apiError.notAuthorized(req as never, res as never, next);

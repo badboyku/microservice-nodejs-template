@@ -3,6 +3,8 @@ info:
   # Title and Version get overwritten in the api-docs route
   title: ''
   version: ''
+tags:
+  - name: Misc
 security:
   - bearerAuth: []
 paths:
@@ -11,7 +13,7 @@ paths:
       summary: Get health
       description: Check app health status
       operationId: getHealth
-      tags: ['health']
+      tags: ['Misc']
       security: []
       responses:
         '200':
@@ -24,6 +26,16 @@ paths:
                 ok: true
                 data:
                   status: ok
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetHealthResponse'
+              example:
+                ok: false
+                data:
+                  status: not ok
 
 components:
   responses:
@@ -44,6 +56,18 @@ components:
               value:
                 ok: false
                 error: Unauthorized
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiErrorResponse'
+    '500':
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiErrorResponse'
 
   schemas:
     ApiErrorResponse:
@@ -75,5 +99,6 @@ components:
   securitySchemes:
     bearerAuth:
       type: http
+      description: JWT Token
       scheme: bearer
       bearerFormat: JWT

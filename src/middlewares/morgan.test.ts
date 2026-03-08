@@ -9,6 +9,8 @@ describe('Morgan Middleware', () => {
   const correlatorGetIdMock = jest.mocked(correlator.getId);
 
   describe('calls function logReqRes', () => {
+    const timestamp = '2023-10-24T12:35:00.000Z';
+    const now = new Date(timestamp);
     const correlationId = 'correlationId';
     const method = 'method';
     const url = 'url';
@@ -19,6 +21,9 @@ describe('Morgan Middleware', () => {
     const contentLength = 'contentLength';
     const responseTime = 'responseTime';
     const totalTime = 'totalTime';
+    const toISOString = jest.fn();
+    const configAppBackup = config.app;
+
     const tokens = {
       method: () => method,
       url: () => url,
@@ -32,7 +37,9 @@ describe('Morgan Middleware', () => {
     };
     const req = {};
     const res = {};
+
     const log = {
+      timestamp,
       correlationId,
       severity: 'INFO',
       message: 'API request received/response sent',
@@ -44,11 +51,30 @@ describe('Morgan Middleware', () => {
     };
     const logStringified = 'logStringified';
 
+    beforeEach(() => {
+      jest.useFakeTimers({ now });
+      correlatorGetIdMock.mockReturnValueOnce(correlationId);
+      toISOString.mockReturnValueOnce(timestamp);
+      jest.spyOn(global, 'Date').mockImplementation(() => ({ toISOString }) as never);
+      jest.spyOn(JSON, 'stringify').mockReturnValueOnce(logStringified);
+    });
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+    afterAll(() => {
+      jest.useRealTimers();
+      config.app = configAppBackup;
+    });
+
     describe('successfully', () => {
       beforeEach(() => {
         config.app = configAppDefault;
-        correlatorGetIdMock.mockReturnValueOnce(correlationId);
-        jest.spyOn(JSON, 'stringify').mockReturnValueOnce(logStringified);
+      });
+
+      it('calls Date toISOString', () => {
+        logReqRes(tokens as never, req as never, res as never);
+
+        expect(toISOString).toHaveBeenCalled();
       });
 
       it('calls correlator.getId', () => {
@@ -71,13 +97,9 @@ describe('Morgan Middleware', () => {
     });
 
     describe('with logOutputFormat=DEV', () => {
-      beforeEach(() => {
-        config.app = { ...configAppDefault, logOutputFormat: 'DEV' };
-        correlatorGetIdMock.mockReturnValueOnce(correlationId);
-        jest.spyOn(JSON, 'stringify').mockReturnValueOnce(logStringified);
-      });
-
       it('calls JSON.stringify with spaces', () => {
+        config.app = { ...configAppDefault, logOutputFormat: 'DEV' };
+
         logReqRes(tokens as never, req as never, res as never);
 
         expect(JSON.stringify).toHaveBeenCalledWith(log, null, 4);
