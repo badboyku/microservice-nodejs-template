@@ -23,7 +23,7 @@ export const logReqRes = (tokens: TokenIndexer, req: Request, res: Response) => 
     },
     totalTime: `${tokens['total-time'](req, res)} ms`,
   };
-  const log = { correlationId: correlator.getId(), severity, message, context };
+  const log = { timestamp: new Date().toISOString(), correlationId: correlator.getId(), severity, message, context };
 
   return config.app.logOutputFormat === LOG_FORMATS.DEV ? JSON.stringify(log, null, 4) : JSON.stringify(log);
 };

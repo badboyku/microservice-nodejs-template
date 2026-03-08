@@ -7,6 +7,19 @@ import type { LogContext, Logger } from 'types';
 const { DEBUG, INFO, WARN, ERROR } = LOG_LEVELS;
 const { DEBUG: DEBUG_NUM, INFO: INFO_NUM, WARN: WARN_NUM, ERROR: ERROR_NUM } = LOG_LEVELS_NUM;
 
+/** region: private functions */
+const getLogMessage = (severity: string, message: string, context?: LogContext): string => {
+  const log = {
+    timestamp: new Date().toISOString(),
+    correlationId: correlator.getId(),
+    severity,
+    message,
+    context,
+  };
+
+  return config.app.logOutputFormat === LOG_FORMATS.DEV ? JSON.stringify(log, null, 4) : JSON.stringify(log);
+};
+
 const getSeverityNum = (severity: string): number => {
   switch (severity) {
     case DEBUG:
@@ -22,18 +35,7 @@ const getSeverityNum = (severity: string): number => {
 };
 
 const skipLog = (severity: string): boolean => getSeverityNum(severity) < getSeverityNum(config.app.logLevel);
-
-const getLogMessage = (severity: string, message: string, context?: LogContext): string => {
-  const log = {
-    timestamp: new Date().toISOString(),
-    correlationId: correlator.getId(),
-    severity,
-    message,
-    context,
-  };
-
-  return config.app.logOutputFormat === LOG_FORMATS.DEV ? JSON.stringify(log, null, 4) : JSON.stringify(log);
-};
+/** endregion */
 
 const logger: Logger = {
   debug: (message: string, context?: LogContext) =>

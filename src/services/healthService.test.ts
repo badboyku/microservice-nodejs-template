@@ -6,7 +6,9 @@ describe('Health Service', () => {
   describe('calls function checkHealth', () => {
     describe('successfully', () => {
       it('return data with status ok', () => {
-        expect(healthService.checkHealth()).toEqual({ data: { status: 'ok' } });
+        const result = healthService.checkHealth();
+
+        expect(result).toEqual({ data: { status: 'ok' } });
       });
     });
   });

@@ -10,7 +10,6 @@ const route = Router();
 if (config.app.nodeEnv?.toLowerCase() === 'development') {
   route.use('/api-docs', openApiRoute);
 }
-
 route.use('/health', healthRoute);
 route.use('*splat', apiError.notAuthorized);
 
